@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
 
-const BASE_PATH = path.resolve(__dirname, '..', '..');
+const BASE_PATH = path.resolve(__dirname, '..');
 
 const FILE_NAME = 'typescript_log.txt'; 
 const BRANCH = 'main';
