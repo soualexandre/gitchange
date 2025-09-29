@@ -1,0 +1,48 @@
+
+name: Automação Git Diária
+
+# Define o gatilho (trigger)
+on:
+  # Agendamento: Executa todos os dias às 10:00 UTC (0 10 * * *)
+  # Ajuste o cron para o seu horário. Exemplo: '30 12 * * *' para 12:30 UTC.
+  schedule:
+    - cron: '0 10 * * *'
+  
+  # Gatilho manual: Permite que você execute o workflow manualmente na aba "Actions"
+  workflow_dispatch:
+
+jobs:
+  run_daily_script:
+    # O ambiente onde o script será executado
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        # Clona o repositório. O token padrão é fundamental para o push.
+        uses: actions/checkout@v4
+        with:
+          # Usa o token de permissão nativo do GitHub (tem permissão de escrita)
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Necessário para que os comandos git pull/push funcionem corretamente
+          fetch-depth: 0 
+
+      - name: Set up Node.js
+        # Configura o Node.js no ambiente
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' 
+
+      - name: Install Dependencies
+        # Instala as dependências do seu projeto (ts-node, typescript, etc.)
+        run: npm install
+
+      - name: Configure Git User Credentials
+        # Define o autor do commit (melhor prática)
+        run: |
+          git config user.name "Alexandre"
+          git config user.email "alexandreifto2@gmail.com"
+      
+      - name: Run Daily Update Script
+        # Executa o seu script de automação usando ts-node
+        # Ajuste o caminho se seu run.ts estiver em outra pasta.
+        run: npx ts-node run.ts
